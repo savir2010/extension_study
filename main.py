@@ -4,6 +4,8 @@ import os
 import json
 import dotenv
 app = Flask(__name__)
+from flask_cors import CORS
+CORS(app)
 dotenv.load_dotenv()
 # Set your OpenAI API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
