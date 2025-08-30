@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Helper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-width: 400px;
+            min-height: 600px;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            margin: 10px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            min-height: calc(100vh - 20px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #4a90e2;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .header .material-icons {
+            font-size: 32px;
+            color: #667eea;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .input-section {
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #4a90e2;
+            font-size: 14px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e1e9f4;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            transition: all 0.3s ease;
+            background: #fafbfd;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #4a90e2;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            color: white;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a90e2;
+            border: 2px solid #4a90e2;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #4a90e2;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .status {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status.success {
+            background: #e8f5e8;
+            color: #2d7d2d;
+            border: 1px solid #c3e6c3;
+        }
+
+        .status.error {
+            background: #ffeaea;
+            color: #d63031;
+            border: 1px solid #ffb3b3;
+        }
+
+        .status.info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 1px solid #bbdefb;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Flashcards Styles */
+        .flashcards-container {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .flashcards-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .flashcards-header h3 {
+            color: #4a90e2;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .card-counter {
+            background: #4a90e2;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .flashcards-list {
+            position: relative;
+            height: 200px;
+            margin-bottom: 20px;
+        }
+
+        .flashcard {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background: white;
+            border: 2px solid #e1e9f4;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard-back {
+            transform: rotateY(180deg);
+            background: #4a90e2;
+            color: white;
+            border-color: #357abd;
+        }
+
+        .flashcard-content {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .flashcard-hint {
+            font-size: 12px;
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            padding: 8px 16px;
+            background: white;
+            border: 2px solid #4a90e2;
+            color: #4a90e2;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #4a90e2;
+            color: white;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .quiz-header {
+            margin-bottom: 20px;
+        }
+
+        .quiz-progress {
+            background: #e1e9f4;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4a90e2, #667eea);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .quiz-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .current-question {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .quiz-options {
+            margin-bottom: 20px;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid #e1e9f4;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .quiz-option:hover {
+            border-color: #4a90e2;
+            background: #f0f7ff;
+        }
+
+        .quiz-option.selected {
+            background: #4a90e2;
+            color: white;
+            border-color: #357abd;
+        }
+
+        .quiz-option.correct {
+            background: #e8f5e8 !important;
+            border-color: #2d7d2d !important;
+            color: #2d7d2d !important;
+        }
+
+        .quiz-option.incorrect {
+            background: #ffeaea !important;
+            border-color: #d63031 !important;
+            color: #d63031 !important;
+        }
+
+        /* Quiz Result */
+        .quiz-result {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .result-icon {
+            font-size: 48px;
+            color: #4a90e2;
+            margin-bottom: 15px;
+        }
+
+        .final-score {
+            font-size: 32px;
+            font-weight: 700;
+            color: #4a90e2;
+            margin-bottom: 10px;
+        }
+
+        .result-message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .btn-restart {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-restart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Settings Button */
+        .settings-btn {
+            background: none;
+            border: none;
+            color: #4a90e2;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 0;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 1px solid #e1e9f4;
+        }
+
+        .modal-header h3 {
+            color: #4a90e2;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .setting-group {
+            margin-bottom: 25px;
+        }
+
+        .setting-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .setting-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .setting-group .material-icons {
+            color: #4a90e2;
+            font-size: 18px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e1e9f4;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4a90e2;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(74, 144, 226, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4a90e2;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(74, 144, 226, 0.3);
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container > * {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container {
+                margin: 5px;
+                padding: 15px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <h1 style="margin: 0;">
+                    <span class="material-icons">school</span>
+                    Study Helper
+                </h1>
+                <button id="settingsBtn" class="settings-btn" title="Settings">
+                    <span class="material-icons">settings</span>
+                </button>
+            </div>
+            <p>Transform your notes into interactive study materials</p>
+        </div>
+
+        <!-- Input Section -->
+        <div class="input-section">
+            <div class="input-group">
+                <label for="inputText">
+                    <span class="material-icons" style="vertical-align: middle; margin-right: 5px; font-size: 18px;">article</span>
+                    Enter your study material:
+                </label>
+                <textarea 
+                    id="inputText" 
+                    placeholder="Paste your notes, textbook content, or any educational material here..."
+                ></textarea>
+            </div>
+
+            <div class="button-group">
+                <button id="checkText" class="btn-secondary">
+                    <span class="material-icons">verified</span>
+                    Verify Content
+                </button>
+            </div>
+
+            <!-- Check Status -->
+            <div id="checkStatus" class="status hidden"></div>
+
+            <div class="button-group">
+                <button id="generateFlashcards" class="btn-primary" disabled>
+                    <span class="material-icons">style</span>
+                    Create Flashcards
+                </button>
+                <button id="generateQuiz" class="btn-primary" disabled>
+                    <span class="material-icons">quiz</span>
+                    Generate Quiz
+                </button>
+            </div>
+
+            <!-- Generate Status -->
+            <div id="generateStatus" class="status hidden"></div>
+        </div>
+
+        <!-- Flashcards Container -->
+        <div id="flashcardsContainer" class="flashcards-container hidden">
+            <div class="flashcards-header">
+                <h3>
+                    <span class="material-icons" style="vertical-align: middle; margin-right: 8px;">style</span>
+                    Flashcards
+                </h3>
+                <div id="cardCounter" class="card-counter">1/5</div>
+            </div>
+            
+            <div id="flashcardsList" class="flashcards-list"></div>
+            
+            <div class="nav-buttons">
+                <button id="prevCard" class="nav-btn">
+                    <span class="material-icons" style="font-size: 16px;">arrow_back</span>
+                    Previous
+                </button>
+                <button id="nextCard" class="nav-btn">
+                    Next
+                    <span class="material-icons" style="font-size: 16px;">arrow_forward</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quizContainer" class="quiz-container hidden">
+            <div class="quiz-header">
+                <h3 style="color: #4a90e2; font-size: 18px; font-weight: 600; margin-bottom: 15px;">
+                    <span class="material-icons" style="vertical-align: middle; margin-right: 8px;">quiz</span>
+                    Practice Quiz
+                </h3>
+                <div class="quiz-progress">
+                    <div class="progress-fill" style="width: 20%;"></div>
+                </div>
+                <div class="quiz-info">
+                    <span id="progressText">Question 1 of 5</span>
+                </div>
+            </div>
+
+            <div id="currentQuestion" class="current-question">
+                Loading question...
+            </div>
+
+            <div id="quizOptions" class="quiz-options">
+                <!-- Quiz options will be populated by JavaScript -->
+            </div>
+
+            <div id="answerFeedback" class="status hidden"></div>
+
+            <div class="nav-buttons">
+                <button id="prevQuestion" class="nav-btn">
+                    <span class="material-icons" style="font-size: 16px;">arrow_back</span>
+                    Previous
+                </button>
+                <button id="nextQuestion" class="nav-btn">
+                    Next
+                    <span class="material-icons" style="font-size: 16px;">arrow_forward</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Result -->
+        <div id="quizResult" class="quiz-result hidden">
+            <div class="result-icon material-icons">emoji_events</div>
+            <div id="finalScore" class="final-score">4/5 (80%)</div>
+            <div id="resultMessage" class="result-message">Great job! You have a good understanding.</div>
+            <button id="restartQuiz" class="btn-restart">
+                <span class="material-icons" style="margin-right: 8px;">refresh</span>
+                Try Again
+            </button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    <span class="material-icons">settings</span>
+                    Settings
+                </h3>
+                <button id="closeSettings" class="close-btn">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <label for="flashcardCount">
+                        <span class="material-icons">style</span>
+                        Number of Flashcards: <span id="flashcardCountValue">5</span>
+                    </label>
+                    <input type="range" id="flashcardCount" min="1" max="10" value="5" class="slider">
+                </div>
+                <div class="setting-group">
+                    <label for="quizCount">
+                        <span class="material-icons">quiz</span>
+                        Number of Quiz Questions: <span id="quizCountValue">5</span>
+                    </label>
+                    <input type="range" id="quizCount" min="1" max="10" value="5" class="slider">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
