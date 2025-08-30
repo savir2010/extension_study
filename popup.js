@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Study Helper Extension loaded');
     // State management
-    let backendUrl = 'https://xtension.pythonanywhere.com/';
+    let backendUrl = 'https://extension-study.onrender.com';
     let flashcards = [];
     let currentCardIndex = 0;
     let quizQuestions = [];
@@ -496,4 +496,15 @@ document.addEventListener('DOMContentLoaded', function() {
         quizCountValue.textContent = quizCount;
         localStorage.setItem('quizCount', quizCount);
     }
+    function pingServer() {
+        fetch(`${backendUrl}/ping`, { method: 'GET' })
+            .then(response => console.log('Pinged server:', response.status))
+            .catch(error => console.error('Ping error:', error));
+    }
+    
+    // Start pinging every 30 seconds
+    setInterval(pingServer, 30000);
+    
+    // Optionally, ping immediately on load
+    pingServer();
 });

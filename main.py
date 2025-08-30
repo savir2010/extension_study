@@ -9,7 +9,8 @@ CORS(app)
 dotenv.load_dotenv()
 # Set your OpenAI API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
+from flask_cors import CORS
+CORS(app)
 # Schema for flashcards (must be object at top level for function call)
 flashcard_schema = {
     "type": "object",
@@ -138,7 +139,9 @@ def quiz():
     return jsonify({"quiz": quiz})
 
 
-
+@app.route('/ping')
+def ping():
+    return 'pong', 200
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=2132)
