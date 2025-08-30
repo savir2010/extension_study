@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Study Helper Extension loaded');
     // State management
-    let backendUrl = 'https://b6fc75abdc08.ngrok-free.app';
+    let backendUrl = 'https://xtension.pythonanywhere.com/';
     let flashcards = [];
     let currentCardIndex = 0;
     let quizQuestions = [];

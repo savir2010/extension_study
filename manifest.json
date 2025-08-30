@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Study Helper Extension",
-  "version": "1.0",
+  "version": "4.0",
   "description": "Convert any text into flashcards and quizzes for studying",
   "permissions": [
     "storage"
